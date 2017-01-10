@@ -1,0 +1,13 @@
+#!/bin/bash
+
+dd if=/dev/zero of=/dev/sda bs=512 count=1 conv=notrunc
+parted /dev/sdb mktable gpt
+mkfs.btrfs /dev/sda
+mount /dev/sda /mnt
+btrfs subvolume create /mnt/root
+btrfs subvolume create /mnt/home
+umount /mnt
+mount -o subvol=root,compress=lzo,autodefrag /dev/sda /mnt
+mkdir /mnt/home
+mount -o subvol=home,compress=lzo,autodefrag /dev/sda /mnt/home
+mkinitcpio -p linux
