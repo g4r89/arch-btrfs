@@ -16,21 +16,4 @@ sed -ri '/yand|rol|aur/s/#//' /etc/pacman.d/mirrorlist
 pacstrap /mnt base base-devel
 genfstab -U /mnt >> /mnt/etc/fstab
 
-arch-chroot /mnt
-
-ln -s /usr/share/zoneinfo/Europe/Moscow /etc/localtime
-hwclock --systohc --utc
-
-sed -i '/#en_US.UTF/s/#//' /etc/locale.gen
-locale-gen
-
-hostname g4xz
-
-systemctl enable dhcpcd
-
-pacman -S grub btrfs-progs
-grub-install --target=i386-pc --recheck /dev/sda
-grub-mkconfig -o /boot/grub/grub.cfg
-
-exit
-umount -R /mnt
+arch-chroot /mnt ./chroot.sh
